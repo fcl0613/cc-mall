@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fcl.ccmall.dao.ProductCategoryDao">
+    <select id="getProductCategoryList" resultType="com.fcl.ccmall.entity.DO.GetProductCategoryListDo">
+        SELECT id,`name`,
+        case `level`
+        when 0 then '一级'
+        when 1 then '二级'
+        end as `level`
+        ,nav_status,show_status,sort FROM product_category
+    </select>
+
+    <select id="getAllParentCategoryList" resultType="com.fcl.ccmall.entity.DO.ParentCategoryDO">
+        select id as categoryId, `name` as categoryName from product_category
+        where `level` = 0
+    </select>
+</mapper>

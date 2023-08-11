@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fcl.ccmall.dao.PorProductDao">
+    <select id="getProductList" resultType="com.fcl.ccmall.entity.DO.ProductListDO">
+        SELECT id, product_name,price,product_cover FROM
+        `product`
+        <where>
+            <if test="dto.categoryId != null">
+                ( category_id = #{dto.categoryId} OR category_id_parent = #{dto.categoryId} )
+            </if>
+            <if test="dto.keyword != null and dto.keyword != ''">
+                AND product_name LIKE concat('%', #{dto.keyword}, '%')
+            </if>
+            <if test="dto.stockFlag != null and dto.stockFlag == true">
+                AND stock &gt; 0
+            </if>
+            AND publish_status = 0
+        </where>
+        <if test="dto.priceFlag != null and dto.priceFlag == true">
+            ORDER BY price ASC
+        </if>
+        <if test="dto.priceFlag != null and dto.priceFlag == false">
+            ORDER BY price DESC
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fcl.ccmall.dao.CartDao">
+    <update id="plusCount">
+        update cc_cart set product_amount = product_amount + 1 where id = #{id}
+    </update>
+
+    <update id="minusCount">
+        update cc_cart set product_amount = product_amount - 1 where id = #{id}
+    </update>
+
+    <select id="getCartList" resultType="com.fcl.ccmall.entity.DO.CartListDO">
+        SELECT t1.id,t1.product_id,t1.product_name,t1.product_amount,t1.product_cover,product.price FROM
+        (
+        SELECT id,product_id,product_name,product_amount,product_cover,product_price
+        FROM cc_cart WHERE customer_id = #{customerId}
+        ) AS t1
+        INNER JOIN
+        product
+        ON t1.product_id = product.id
+    </select>
+</mapper>

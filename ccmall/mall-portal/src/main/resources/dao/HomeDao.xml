@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fcl.ccmall.dao.HomeDao">
+    <select id="getHomeAdvertiseList" resultType="com.fcl.ccmall.entity.DO.AdvertisingDO">
+        select ad_pic,ad_link from cc_advertising where publish_status = 1 and NOW() &gt;= begin_time
+        and NOW() &lt;= end_time
+    </select>
+
+    <select id="getHomeCategory" resultType="com.fcl.ccmall.entity.DO.HomeCateGoryDO">
+        select id, `name`, icon from product_category where nav_status = 1 order by sort limit 8
+    </select>
+
+    <select id="getHomeRecommendProduct" resultType="com.fcl.ccmall.entity.DO.CommonProductDO">
+        select id, product_name, price, product_cover from product where publish_status = 0 and
+        recommend_status = 1 order by id desc limit 8
+    </select>
+
+    <select id="getHomeNewProduct" resultType="com.fcl.ccmall.entity.DO.CommonProductDO">
+        select id, product_name, price, product_cover from product where publish_status = 0 and
+        new_status = 1 order by id desc limit 8
+    </select>
+
+    <select id="getHomeProductList" resultType="com.fcl.ccmall.entity.DO.CommonProductDO">
+        select id, product_name, price, product_cover from product where publish_status = 0
+        and category_id_parent = #{categoryId} order by id desc limit 30
+    </select>
+</mapper>

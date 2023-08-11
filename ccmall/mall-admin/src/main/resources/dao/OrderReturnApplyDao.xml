@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fcl.ccmall.dao.OrderReturnApplyDao">
+    <select id="getApplyList" resultType="com.fcl.ccmall.entity.DO.OrderReturnApplyDO">
+        SELECT id, order_sn, return_price, `status`, create_time, handle_time FROM `order_return_apply`
+        <where>
+            `status` &lt;&gt; 4
+            <if test="dto.orderId != null and dto.orderId != ''">
+                and order_sn = #{dto.orderId}
+            </if>
+            <if test="dto.status != null">
+                and `status` = #{dto.status}
+            </if>
+            <if test="dto.startTime != null and dto.startTime != ''">
+                and DATE_FORMAT(create_time,'%Y-%m-%d')  &gt;= #{dto.startTime}
+            </if>
+            <if test="dto.endTime != null and dto.endTime != ''">
+                and DATE_FORMAT(create_time,'%Y-%m-%d')  &lt;= #{dto.endTime}
+            </if>
+        </where>
+        order by id desc
+    </select>
+</mapper>

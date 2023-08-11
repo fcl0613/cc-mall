@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fcl.ccmall.dao.CouponDao">
+    <select id="getCouponList" resultType="com.fcl.ccmall.model.CcCoupon">
+        SELECT cc_coupon.id, cc_coupon.type, cc_coupon.`name`, cc_coupon.coupon_count, cc_coupon.amount, cc_coupon.per_limit,
+        cc_coupon.min_point,cc_coupon.start_time,cc_coupon.end_time,cc_coupon.use_type FROM
+        (
+        SELECT id, coupon_id FROM cc_coupon_history WHERE member_id = #{memberId} AND use_status = #{useStatus}
+        ) AS t1
+        INNER JOIN
+        cc_coupon
+        ON t1.coupon_id = cc_coupon.id
+    </select>
+
+    <select id="getCustomerCoupon" resultType="com.fcl.ccmall.model.CcCoupon">
+        SELECT id, `name`, amount, start_time, end_time, use_type FROM
+        (
+        SELECT coupon_id FROM cc_coupon_history WHERE DATE_FORMAT(get_time,'%Y-%m-%d') >= #{time}
+        AND use_status = #{status} AND member_id = #{memberId}
+        ) AS t1
+        INNER JOIN
+        cc_coupon
+        ON t1.coupon_id = cc_coupon.id
+    </select>
+
+    <update id="addReceivedCoupon">
+        update cc_coupon set receive_count = receive_count + 1 where id = #{id}
+    </update>
+
+    <update id="addUseCoupon">
+        update cc_coupon set receive_count = use_count + 1 where id = #{id}
+    </update>
+</mapper>

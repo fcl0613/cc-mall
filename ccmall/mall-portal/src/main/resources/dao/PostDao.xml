@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fcl.ccmall.dao.PostDao">
+    <update id="likePost">
+        update cc_post set like_count = like_count + 1 where id = #{id}
+    </update>
+
+    <update id="unLikePost">
+        update cc_post set like_count = like_count - 1 where id = #{id} and like_count &gt; 0
+    </update>
+
+    <select id="getHomePostList" resultType="com.fcl.ccmall.entity.DO.HomePostListDO">
+        SELECT t1.id,t1.title,t1.content,t1.pageview,t1.like_count,t1.comment_count,
+        t1.pic, customer.username,customer.avatar FROM
+        (
+        SELECT id,customer_id,title,content,pageview,like_count,comment_count,pic FROM cc_post
+        <where>
+            <if test="dto.title != null and dto.title != ''">
+                title like concat('%', #{dto.title}, '%')
+            </if>
+        </where>
+        ) AS t1
+        INNER JOIN
+        customer
+        ON
+        t1.customer_id = customer.id
+        ORDER BY t1.id DESC
+    </select>
+
+    <update id="incrementPageView">
+        update cc_post set pageview = pageview + 1 where id = #{id}
+    </update>
+
+    <update id="incrementCommentCount">
+        update cc_post set comment_count = comment_count + 1 where id = #{id}
+    </update>
+</mapper>

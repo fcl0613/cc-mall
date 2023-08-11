@@ -1,0 +1,15 @@
+package com.fcl.ccmall.model;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.Data;
+
+@Data
+public class SysUserRole {
+    @TableId(type = IdType.AUTO)
+    private Integer id;
+
+    private Integer userId;
+
+    private Integer roleId;
+}

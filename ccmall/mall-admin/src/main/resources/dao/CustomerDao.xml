@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fcl.ccmall.dao.CustomerDao">
+    <select id="getCustomerDO" resultType="com.fcl.ccmall.entity.DO.GetCustomerListDO">
+        SELECT id,username,phone,
+        case gender
+        <foreach collection="map" index="key" item="value">
+            when ${key} then #{value}
+        </foreach>
+        end as gender
+        ,nick_name FROM customer
+        <where>
+            <if test="keyword != null and keyword != ''">
+                username like concat('%',#{keyword},'%')
+            </if>
+        </where>
+    </select>
+</mapper>

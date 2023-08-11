@@ -1,0 +1,57 @@
+spring:
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 查看日志
+  mapper-locations:
+    - classpath:mapper/*.xml
+    - classpath:dao/*.xml
+
+jwt:
+  secret: fcl123 #JWT加解密使用的密钥
+  expiration: 604800 #JWT的超期限时间(60*60*24*7) 7天
+
+secure:
+  ignored:
+    urls: #安全路径白名单
+      - /swagger-ui/
+      - /swagger-resources/**
+      - /**/v2/api-docs
+      - /**/*.html
+      - /**/*.js
+      - /**/*.css
+      - /**/*.png
+      - /**/*.map
+      - /favicon.ico
+      - /actuator/**
+      - /druid/**
+      - /customer/login
+      - /customer/register
+      - /customer/info
+      - /customer/logout
+      - /customer/send/message
+      - /home/content
+      - /alipay/**
+
+aliyun:
+  oss:
+    endpoint:  # oss对外服务的访问域名
+    accessKeyId: # 换成你自己的
+    accessKeySecret: # 换成你自己的
+    bucketName: # 换成你自己的
+    policy:
+      expire: 300 # 签名有效期
+    maxSize: 10 # 上传文件的大小
+    callback: http://localhost:9001/ccmall/sys/aliyun/oss/callback #文件上传后的回调地址
+    dir:
+      prefix: ccmall/image/ #上传文件夹路径前缀
+
+CUSTOMER_TOKEN_REDIS_PRE: customer_token#
+MANAGE_PERMISSIONS_REDIS_PRE: manage_permissions#
+CUSTOMER_PERMISSIONS_REDIS_PRE: customer_permissions#
+SEND_MESSAGE_REDIS_PRE: phone#

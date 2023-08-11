@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fcl.ccmall.dao.HomeDao">
+    <select id="getOrderCount" resultType="com.fcl.ccmall.entity.DO.OrderCountDO">
+        SELECT COUNT(id) AS order_count, IFNULL(SUM(pay_amount), 0) AS income
+        FROM `order_master`
+        WHERE order_status = 3
+        AND DATE_FORMAT(order_time,'%Y-%m-%d') = #{time}
+    </select>
+
+    <select id="todayOrderCount" resultType="integer">
+        select count(id) from order_master
+        where DATE_FORMAT(order_time,'%Y-%m-%d') = #{time}
+    </select>
+
+    <select id="getIncome" resultType="decimal">
+        select IFNULL(sum(pay_amount), 0) from order_master
+        where DATE_FORMAT(order_time,'%Y-%m-%d') = #{time}
+    </select>
+</mapper>

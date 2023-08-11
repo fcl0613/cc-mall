@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fcl.ccmall.dao.PersonaDao">
+    <insert id="batchInsert">
+        insert into ${tableName}
+        (
+            phone,gender,age,career,income,hasCar,hasHome,educationalLevel,countryOfOrigin
+        )
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.phone},
+            #{item.gender},
+            #{item.age},
+            #{item.career},
+            #{item.income},
+            #{item.hasCar},
+            #{item.hasHome},
+            #{item.educationalLevel},
+            #{item.countryOfOrigin}
+            )
+        </foreach>
+    </insert>
+
+    <update id="creatTable">
+        create table if not exists ${tableName} (
+            `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+            `phone` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+            `gender` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+            `age` tinyint(3) UNSIGNED NULL DEFAULT NULL,
+            `career` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+            `income` decimal(10, 2) UNSIGNED NULL DEFAULT NULL,
+            `hasCar` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+            `hasHome` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+            `educationalLevel` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+            `countryOfOrigin` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+            PRIMARY KEY (`id`)
+        )
+    </update>
+
+    <select id="getCount" resultType="integer">
+        select count(id) from ${tableName}
+    </select>
+
+    <select id="getList" resultType="com.fcl.ccmall.entity.excelmodel.Persona">
+        select phone,gender,age,career,income,hasCar,hasHome,educationalLevel,countryOfOrigin
+        from ${tableName}
+        limit #{page}, #{limit}
+    </select>
+
+    <select id="analysisGender" resultType="com.fcl.ccmall.entity.DO.PersonaAnalysisDO">
+        SELECT COUNT(DISTINCT phone) AS `count` ,gender AS tag FROM ${tableName} GROUP BY gender
+    </select>
+
+    <select id="analysisAge" resultType="com.fcl.ccmall.entity.DO.PersonaAnalysisDO">
+        SELECT COUNT(DISTINCT phone) AS `count`,
+        CASE
+        WHEN age BETWEEN 0 AND 6 THEN '童年'
+        WHEN age BETWEEN 7 AND 17 THEN '少年'
+        WHEN age BETWEEN 18 AND 40 THEN '青年'
+        WHEN age BETWEEN 41 AND 65 THEN '中年'
+        ELSE '老年'
+        END AS 'tag'
+        FROM
+        ${tableName}
+        GROUP BY
+        CASE
+        WHEN age BETWEEN 0 AND 6 THEN '童年'
+        WHEN age BETWEEN 7 AND 17 THEN '少年'
+        WHEN age BETWEEN 18 AND 40 THEN '青年'
+        WHEN age BETWEEN 41 AND 65 THEN '中年'
+        ELSE '老年'
+        END
+    </select>
+
+    <select id="analysisCareer" resultType="com.fcl.ccmall.entity.DO.PersonaAnalysisDO">
+        SELECT COUNT(DISTINCT phone) AS `count`, career AS tag
+        FROM ${tableName} GROUP BY career ORDER BY `count` DESC LIMIT 7;
+    </select>
+
+    <select id="analysisIncome" resultType="com.fcl.ccmall.entity.DO.PersonaAnalysisDO">
+        SELECT COUNT(DISTINCT phone) AS `count`,
+        CASE
+        WHEN income BETWEEN 0 AND 5000 THEN '5千以下'
+        WHEN income BETWEEN 5001 AND 10000 THEN '5千到1万'
+        WHEN income BETWEEN 10001 AND 20000 THEN '1万到2万'
+        WHEN income BETWEEN 20001 AND 30000 THEN '2万到3万'
+        ELSE '3万以上'
+        END AS 'tag'
+        FROM
+        ${tableName}
+        GROUP BY
+        CASE
+        WHEN income BETWEEN 0 AND 5000 THEN '5千以下'
+        WHEN income BETWEEN 5001 AND 10000 THEN '5千到1万'
+        WHEN income BETWEEN 10001 AND 20000 THEN '1万到2万'
+        WHEN income BETWEEN 20001 AND 30000 THEN '2万到3万'
+        ELSE '3万以上'
+        END
+    </select>
+
+    <select id="analysisHasCar" resultType="com.fcl.ccmall.entity.DO.PersonaAnalysisDO">
+        SELECT COUNT(DISTINCT phone) AS `count`, hasCar AS tag FROM ${tableName} GROUP BY hasCar
+    </select>
+
+    <select id="analysisHasHome" resultType="com.fcl.ccmall.entity.DO.PersonaAnalysisDO">
+        SELECT COUNT(DISTINCT phone) AS `count`, hasHome AS tag FROM ${tableName} GROUP BY hasHome
+    </select>
+
+    <select id="analysisEducationalLevel" resultType="com.fcl.ccmall.entity.DO.PersonaAnalysisDO">
+        SELECT COUNT(DISTINCT phone) AS `count`, educationalLevel AS tag FROM ${tableName} GROUP BY educationalLevel
+    </select>
+
+    <select id="analysisCountryOfOrigin" resultType="com.fcl.ccmall.entity.DO.PersonaAnalysisDO">
+        SELECT COUNT(DISTINCT phone) AS `count`, countryOfOrigin AS tag FROM ${tableName}  GROUP BY countryOfOrigin
+    </select>
+
+    <select id="selectTableCount" resultType="integer">
+        SELECT COUNT(*) FROM information_schema.TABLES WHERE table_name = #{tableName}
+    </select>
+</mapper>
